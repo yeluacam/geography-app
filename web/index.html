@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>German States & Capitals Study Map</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="layout">
+      <header>
+        <h1>German States & Capitals Study Map</h1>
+        <p>Toggle labels, use presets, and train with a timed quiz.</p>
+      </header>
+
+      <section class="controls" aria-label="Map controls">
+        <div class="toggle-group">
+          <label><input id="toggle-state-labels" type="checkbox" checked /> Show state names</label>
+          <label><input id="toggle-capital-labels" type="checkbox" checked /> Show capital names</label>
+        </div>
+
+        <div class="preset-group">
+          <button data-preset="study" type="button">Study mode</button>
+          <button data-preset="states" type="button">Show states, hide capitals</button>
+          <button data-preset="capitals" type="button">Show capitals, hide states</button>
+          <button data-preset="hard" type="button">Hard mode (hide both)</button>
+        </div>
+      </section>
+
+      <section class="quiz" aria-label="Quiz mode">
+        <h2>Quiz mode</h2>
+        <div class="quiz-controls">
+          <label for="quiz-length">Questions</label>
+          <input id="quiz-length" type="number" min="1" max="30" value="12" />
+          <label for="quiz-time">Time (seconds)</label>
+          <input id="quiz-time" type="number" min="15" max="300" value="90" />
+          <button id="start-quiz" type="button">Start quiz</button>
+          <button id="stop-quiz" type="button" disabled>Stop</button>
+        </div>
+        <p id="quiz-status" class="quiz-status">Start a quiz to begin.</p>
+      </section>
+
+      <section class="map-wrap">
+        <svg id="map" viewBox="0 0 820 1100" role="img" aria-label="Schematic map of Germany with states and capitals"></svg>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

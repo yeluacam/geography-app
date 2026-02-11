@@ -1,44 +1,135 @@
-const capitals = {
-  'Baden-Württemberg': { capital: 'Stuttgart', lon: 9.1829, lat: 48.7758 },
-  Bavaria: { capital: 'Munich', lon: 11.582, lat: 48.1351 },
-  Berlin: { capital: 'Berlin', lon: 13.405, lat: 52.52 },
-  Brandenburg: { capital: 'Potsdam', lon: 13.0645, lat: 52.3906 },
-  Bremen: { capital: 'Bremen', lon: 8.8017, lat: 53.0793 },
-  Hamburg: { capital: 'Hamburg', lon: 9.9937, lat: 53.5511 },
-  Hesse: { capital: 'Wiesbaden', lon: 8.2398, lat: 50.0782 },
-  'Lower Saxony': { capital: 'Hanover', lon: 9.732, lat: 52.3759 },
-  'Mecklenburg-Vorpommern': { capital: 'Schwerin', lon: 11.4148, lat: 53.6355 },
-  'North Rhine-Westphalia': { capital: 'Düsseldorf', lon: 6.7735, lat: 51.2277 },
-  'Rhineland-Palatinate': { capital: 'Mainz', lon: 8.2473, lat: 50.0 },
-  Saarland: { capital: 'Saarbrücken', lon: 6.9969, lat: 49.2402 },
-  Saxony: { capital: 'Dresden', lon: 13.7373, lat: 51.0504 },
-  'Saxony-Anhalt': { capital: 'Magdeburg', lon: 11.6276, lat: 52.1205 },
-  'Schleswig-Holstein': { capital: 'Kiel', lon: 10.1228, lat: 54.3233 },
-  Thuringia: { capital: 'Erfurt', lon: 11.0299, lat: 50.9848 }
-};
-
-const stateNameAliases = {
-  BadenWuerttemberg: 'Baden-Württemberg',
-  Bayern: 'Bavaria',
-  Berlin: 'Berlin',
-  Brandenburg: 'Brandenburg',
-  Bremen: 'Bremen',
-  Hamburg: 'Hamburg',
-  Hessen: 'Hesse',
-  Niedersachsen: 'Lower Saxony',
-  MecklenburgVorpommern: 'Mecklenburg-Vorpommern',
-  NordrheinWestfalen: 'North Rhine-Westphalia',
-  RheinlandPfalz: 'Rhineland-Palatinate',
-  Saarland: 'Saarland',
-  Sachsen: 'Saxony',
-  SachsenAnhalt: 'Saxony-Anhalt',
-  SchleswigHolstein: 'Schleswig-Holstein',
-  Thueringen: 'Thuringia',
-  Thüringen: 'Thuringia'
-};
+const states = [
+  {
+    id: 'SH',
+    name: 'Schleswig-Holstein',
+    capital: 'Kiel',
+    path: 'M210 80 L285 70 L340 95 L332 145 L290 178 L232 170 L198 134 Z',
+    label: [272, 122],
+    capitalPos: [287, 97]
+  },
+  {
+    id: 'MV',
+    name: 'Mecklenburg-Vorpommern',
+    capital: 'Schwerin',
+    path: 'M340 95 L418 92 L490 118 L516 178 L488 217 L422 220 L356 186 L332 145 Z',
+    label: [431, 160],
+    capitalPos: [395, 148]
+  },
+  {
+    id: 'HH',
+    name: 'Hamburg',
+    capital: 'Hamburg',
+    path: 'M250 196 L271 194 L278 212 L263 225 L246 216 Z',
+    label: [271, 236],
+    capitalPos: [260, 208]
+  },
+  {
+    id: 'HB',
+    name: 'Bremen',
+    capital: 'Bremen',
+    path: 'M202 238 L218 232 L228 245 L222 262 L206 260 L197 248 Z',
+    label: [214, 278],
+    capitalPos: [213, 248]
+  },
+  {
+    id: 'NI',
+    name: 'Lower Saxony',
+    capital: 'Hanover',
+    path: 'M165 178 L232 170 L290 178 L332 145 L356 186 L352 264 L336 306 L292 342 L230 356 L168 325 L140 272 L145 214 Z',
+    label: [245, 270],
+    capitalPos: [275, 288]
+  },
+  {
+    id: 'BB',
+    name: 'Brandenburg',
+    capital: 'Potsdam',
+    path: 'M372 252 L438 236 L502 250 L534 302 L526 364 L495 412 L442 426 L394 390 L372 332 Z',
+    label: [456, 327],
+    capitalPos: [442, 334]
+  },
+  {
+    id: 'BE',
+    name: 'Berlin',
+    capital: 'Berlin',
+    path: 'M438 312 L452 308 L458 321 L448 336 L433 333 L430 321 Z',
+    label: [468, 344],
+    capitalPos: [444, 321]
+  },
+  {
+    id: 'ST',
+    name: 'Saxony-Anhalt',
+    capital: 'Magdeburg',
+    path: 'M312 234 L372 252 L372 332 L344 378 L304 368 L282 328 L286 274 Z',
+    label: [328, 304],
+    capitalPos: [323, 276]
+  },
+  {
+    id: 'NW',
+    name: 'North Rhine-Westphalia',
+    capital: 'Düsseldorf',
+    path: 'M90 244 L145 214 L140 272 L168 325 L152 378 L114 420 L76 400 L62 342 L70 282 Z',
+    label: [112, 327],
+    capitalPos: [106, 350]
+  },
+  {
+    id: 'HE',
+    name: 'Hesse',
+    capital: 'Wiesbaden',
+    path: 'M230 356 L292 342 L304 368 L298 430 L266 468 L228 464 L201 426 L202 382 Z',
+    label: [255, 410],
+    capitalPos: [241, 434]
+  },
+  {
+    id: 'TH',
+    name: 'Thuringia',
+    capital: 'Erfurt',
+    path: 'M304 368 L344 378 L372 410 L358 452 L316 466 L282 442 L298 430 Z',
+    label: [329, 420],
+    capitalPos: [319, 427]
+  },
+  {
+    id: 'SN',
+    name: 'Saxony',
+    capital: 'Dresden',
+    path: 'M372 410 L442 426 L470 458 L462 498 L430 528 L378 520 L348 486 L358 452 Z',
+    label: [410, 475],
+    capitalPos: [444, 487]
+  },
+  {
+    id: 'RP',
+    name: 'Rhineland-Palatinate',
+    capital: 'Mainz',
+    path: 'M138 432 L202 382 L201 426 L228 464 L212 510 L186 542 L146 538 L122 496 Z',
+    label: [173, 479],
+    capitalPos: [191, 500]
+  },
+  {
+    id: 'SL',
+    name: 'Saarland',
+    capital: 'Saarbrücken',
+    path: 'M118 548 L146 538 L152 566 L138 590 L112 582 L108 560 Z',
+    label: [132, 607],
+    capitalPos: [130, 571]
+  },
+  {
+    id: 'BW',
+    name: 'Baden-Württemberg',
+    capital: 'Stuttgart',
+    path: 'M152 566 L212 510 L248 526 L266 568 L252 620 L222 674 L170 684 L142 646 L138 590 Z',
+    label: [205, 604],
+    capitalPos: [222, 578]
+  },
+  {
+    id: 'BY',
+    name: 'Bavaria',
+    capital: 'Munich',
+    path: 'M248 526 L316 466 L348 486 L378 520 L430 528 L450 586 L434 654 L392 708 L318 734 L264 706 L222 674 L252 620 L266 568 Z',
+    label: [337, 620],
+    capitalPos: [318, 682]
+  }
+];
 
 const map = document.getElementById('map');
-const selectionStatus = document.getElementById('selection-status');
 const stateToggle = document.getElementById('toggle-state-labels');
 const capitalToggle = document.getElementById('toggle-capital-labels');
 const quizLength = document.getElementById('quiz-length');
@@ -47,9 +138,9 @@ const startQuizButton = document.getElementById('start-quiz');
 const stopQuizButton = document.getElementById('stop-quiz');
 const quizStatus = document.getElementById('quiz-status');
 
-let geoFeatures = [];
-let projection = null;
-
+let projection;
+let geoPath;
+let features = [];
 const stateElements = new Map();
 const capitalElements = new Map();
 const stateLabelElements = new Map();
@@ -64,131 +155,44 @@ const quizState = {
   timerId: null
 };
 
-function normalizeStateName(raw) {
-  const input = String(raw ?? '').trim();
-  if (!input) return null;
-  if (capitals[input]) return input;
-
-  const compact = input.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Za-z]/g, '');
-  return stateNameAliases[compact] ?? input;
-}
-
-function stateNameFromFeature(feature) {
-  const props = feature.properties ?? {};
-  const candidate = props.name ?? props.NAME_1 ?? props.state ?? props.State ?? props.land ?? props.LAND ?? props.GEN;
-  return normalizeStateName(candidate);
-}
-
-function mercatorRaw(lon, lat) {
-  const lambda = (lon * Math.PI) / 180;
-  const phi = (lat * Math.PI) / 180;
-  return [lambda, Math.log(Math.tan(Math.PI / 4 + phi / 2))];
-}
-
-function flattenCoordinates(geometry) {
-  if (geometry.type === 'Polygon') return [geometry.coordinates];
-  if (geometry.type === 'MultiPolygon') return geometry.coordinates;
-  return [];
-}
-
-function buildProjection(features, width, height, padding = 20) {
-  const points = [];
-  for (const feature of features) {
-    for (const polygon of flattenCoordinates(feature.geometry)) {
-      for (const ring of polygon) {
-        for (const [lon, lat] of ring) {
-          points.push(mercatorRaw(lon, lat));
-        }
-      }
-    }
-  }
-
-  const xs = points.map((p) => p[0]);
-  const ys = points.map((p) => p[1]);
-  const minX = Math.min(...xs);
-  const maxX = Math.max(...xs);
-  const minY = Math.min(...ys);
-  const maxY = Math.max(...ys);
-
-  const sx = (width - 2 * padding) / (maxX - minX);
-  const sy = (height - 2 * padding) / (maxY - minY);
-  const scale = Math.min(sx, sy);
-
-  return {
-    project(lon, lat) {
-      const [x, y] = mercatorRaw(lon, lat);
-      return [padding + (x - minX) * scale, padding + (maxY - y) * scale];
-    }
-  };
-}
-
-function polygonPath(geometry) {
-  let path = '';
-  for (const polygon of flattenCoordinates(geometry)) {
-    for (const ring of polygon) {
-      if (!ring.length) continue;
-      const [x0, y0] = projection.project(ring[0][0], ring[0][1]);
-      path += `M${x0.toFixed(2)} ${y0.toFixed(2)}`;
-      for (let i = 1; i < ring.length; i += 1) {
-        const [x, y] = projection.project(ring[i][0], ring[i][1]);
-        path += `L${x.toFixed(2)} ${y.toFixed(2)}`;
-      }
-      path += 'Z';
-    }
-  }
-  return path;
-}
-
-function featureCentroid(feature) {
-  let sumX = 0;
-  let sumY = 0;
-  let count = 0;
-  for (const polygon of flattenCoordinates(feature.geometry)) {
-    for (const ring of polygon) {
-      for (const [lon, lat] of ring) {
-        const [x, y] = projection.project(lon, lat);
-        sumX += x;
-        sumY += y;
-        count += 1;
-      }
-    }
-  }
-  return count ? [sumX / count, sumY / count] : [0, 0];
-}
-
-function clearMap() {
-  map.replaceChildren();
-  stateElements.clear();
-  capitalElements.clear();
-  stateLabelElements.clear();
-  capitalLabelElements.clear();
-}
-
-function svgEl(tag, attrs = {}) {
+function svgEl(tag, attrs) {
   const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
-  Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, String(v)));
+  Object.entries(attrs).forEach(([key, value]) => el.setAttribute(key, value));
   return el;
 }
 
 function renderMap() {
-  clearMap();
+  map.replaceChildren();
 
-  const width = 720;
-  const height = 980;
-  map.setAttribute('viewBox', `0 0 ${width} ${height}`);
-  projection = buildProjection(geoFeatures, width, height, 24);
+  const background = svgEl('path', {
+    d: 'M190 70 L290 48 L415 64 L520 126 L560 220 L552 330 L520 424 L486 514 L458 612 L404 722 L324 770 L226 756 L150 702 L108 614 L84 500 L58 380 L66 278 L108 188 Z',
+    class: 'country-outline'
+  });
+  map.appendChild(background);
 
-  for (const feature of geoFeatures) {
-    const stateName = stateNameFromFeature(feature);
-    if (!stateName || !capitals[stateName]) continue;
-
+  for (const state of states) {
     const statePath = svgEl('path', {
+      d: state.path,
       class: 'state',
-      d: polygonPath(feature.geometry),
-      'data-state': stateName,
-      tabindex: 0,
-      'aria-label': stateName
+      'data-id': state.id,
+      'aria-label': state.name,
+      tabindex: '0'
     });
+
+    statePath.addEventListener('click', () => handleStatePick(state.id));
+    statePath.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        handleStatePick(state.id);
+      }
+    });
+
+    const stateLabel = svgEl('text', {
+      x: state.label[0],
+      y: state.label[1],
+      class: 'state-label'
+    });
+    stateLabel.textContent = state.name;
 
     const [lx, ly] = featureCentroid(feature);
     const stateLabel = svgEl('text', { class: 'state-label', x: lx, y: ly });
@@ -196,42 +200,46 @@ function renderMap() {
 
     const [cx, cy] = projection.project(capitals[stateName].lon, capitals[stateName].lat);
     const capitalDot = svgEl('circle', {
+      cx: state.capitalPos[0],
+      cy: state.capitalPos[1],
+      r: 5,
       class: 'capital-dot',
-      'data-state': stateName,
-      cx,
-      cy,
-      r: 4.5,
-      tabindex: 0,
-      'aria-label': `${capitals[stateName].capital}, capital of ${stateName}`
+      'data-id': state.id,
+      'aria-label': `${state.capital}, capital of ${state.name}`,
+      tabindex: '0'
     });
 
-    const capitalLabel = svgEl('text', { class: 'capital-label', x: cx + 6, y: cy - 6 });
-    capitalLabel.textContent = capitals[stateName].capital;
-
-    statePath.addEventListener('click', () => handleStatePick(stateName));
-    statePath.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        handleStatePick(stateName);
-      }
-    });
-
-    capitalDot.addEventListener('click', () => handleCapitalPick(stateName));
+    capitalDot.addEventListener('click', () => handleCapitalPick(state.id));
     capitalDot.addEventListener('keydown', (event) => {
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
-        handleCapitalPick(stateName);
+        handleCapitalPick(state.id);
       }
     });
 
+    const capitalLabel = svgEl('text', {
+      x: state.capitalPos[0] + 8,
+      y: state.capitalPos[1] - 8,
+      class: 'capital-label'
+    });
+    capitalLabel.textContent = state.capital;
+
     map.append(statePath, stateLabel, capitalDot, capitalLabel);
-    stateElements.set(stateName, statePath);
-    capitalElements.set(stateName, capitalDot);
-    stateLabelElements.set(stateName, stateLabel);
-    capitalLabelElements.set(stateName, capitalLabel);
+
+    stateNodes.set(state.id, statePath);
+    capitalNodes.set(state.id, capitalDot);
+    stateLabelNodes.push(stateLabel);
+    capitalLabelNodes.push(capitalLabel);
   }
 
-  updateLabelVisibility();
+  if (capitals[input]) return input;
+
+  const compact = input
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^A-Za-z]/g, '');
+
+  return stateNameAliases[compact] ?? input;
 }
 
 function updateLabelVisibility() {
@@ -239,8 +247,8 @@ function updateLabelVisibility() {
     el.style.display = stateToggle.checked ? 'block' : 'none';
   });
 
-  capitalLabelElements.forEach((el) => {
-    el.style.display = capitalToggle.checked ? 'block' : 'none';
+  capitalLabelNodes.forEach((label) => {
+    label.style.display = capitalToggle.checked ? 'block' : 'none';
   });
 }
 
@@ -254,22 +262,32 @@ function applyPreset(preset) {
 
   const selected = presets[preset];
   if (!selected) return;
+
   [stateToggle.checked, capitalToggle.checked] = selected;
   updateLabelVisibility();
 }
 
 function createQuestions(totalQuestions) {
-  const names = [...stateElements.keys()];
-  const order = [...names].sort(() => Math.random() - 0.5).slice(0, Math.min(totalQuestions, names.length));
+  const order = [...states].sort(() => Math.random() - 0.5).slice(0, Math.min(totalQuestions, states.length));
   const half = Math.ceil(order.length / 2);
 
-  return order
-    .map((stateName, index) =>
-      index < half
-        ? { type: 'capital', stateName, prompt: `Click the capital of ${stateName}.` }
-        : { type: 'state', stateName, prompt: `Click the state whose capital is ${capitals[stateName].capital}.` }
-    )
-    .sort(() => Math.random() - 0.5);
+  const base = order.map((state, index) => {
+    if (index < half) {
+      return {
+        type: 'capital',
+        stateId: state.id,
+        prompt: `Click the capital of ${state.name}.`
+      };
+    }
+
+    return {
+      type: 'state',
+      stateId: state.id,
+      prompt: `Click the state whose capital is ${state.capital}.`
+    };
+  });
+
+  return base.sort(() => Math.random() - 0.5);
 }
 
 function startQuiz() {
@@ -339,44 +357,38 @@ function updateQuizBanner() {
 }
 
 function resetMarks() {
-  stateElements.forEach((el) => el.classList.remove('correct', 'wrong', 'active', 'selected'));
-  capitalElements.forEach((el) => el.classList.remove('correct', 'wrong', 'active', 'selected'));
+  for (const el of stateElements.values()) el.classed('correct wrong active selected', false);
+  for (const el of capitalElements.values()) el.classed('correct wrong active selected', false);
 }
 
 function highlightCurrentAnswerArea() {
   resetMarks();
-  if (!quizState.active) return;
 
+  if (!quizState.active) return;
   const question = quizState.questions[quizState.currentIndex];
   if (!question) return;
 
   if (question.type === 'capital') {
-    stateElements.get(question.stateName)?.classList.add('active');
+    stateNodes.get(question.stateId)?.classList.add('active');
   } else {
-    capitalElements.get(question.stateName)?.classList.add('active');
+    capitalNodes.get(question.stateId)?.classList.add('active');
   }
 }
 
-function markAndAdvance(stateName, pickedType) {
-  if (!quizState.active) {
-    selectionStatus.textContent = `${stateName} — ${capitals[stateName].capital}`;
-    resetMarks();
-    stateElements.get(stateName)?.classList.add('selected');
-    capitalElements.get(stateName)?.classList.add('selected');
-    return;
-  }
+function markAndAdvance(stateId, pickedType) {
+  if (!quizState.active) return;
 
   const question = quizState.questions[quizState.currentIndex];
   if (!question || question.type !== pickedType) return;
 
-  const isCorrect = question.stateName === stateName;
+  const isCorrect = question.stateId === stateId;
 
   if (pickedType === 'capital') {
-    capitalElements.get(stateName)?.classList.add(isCorrect ? 'correct' : 'wrong');
-    stateElements.get(question.stateName)?.classList.add('active');
+    capitalNodes.get(stateId)?.classList.add(isCorrect ? 'correct' : 'wrong');
+    stateNodes.get(question.stateId)?.classList.add('active');
   } else {
-    stateElements.get(stateName)?.classList.add(isCorrect ? 'correct' : 'wrong');
-    capitalElements.get(question.stateName)?.classList.add('active');
+    stateNodes.get(stateId)?.classList.add(isCorrect ? 'correct' : 'wrong');
+    capitalNodes.get(question.stateId)?.classList.add('active');
   }
 
   if (isCorrect) quizState.score += 1;
@@ -385,18 +397,14 @@ function markAndAdvance(stateName, pickedType) {
   updateQuizBanner();
 
   if (quizState.currentIndex >= quizState.questions.length) {
-    setTimeout(() => stopQuiz(`Completed. Final score: ${quizState.score}/${quizState.questions.length}.`), 300);
+    setTimeout(() => stopQuiz(`Completed. Final score: ${quizState.score}/${quizState.questions.length}.`), 320);
     return;
   }
 
   setTimeout(() => {
     highlightCurrentAnswerArea();
     updateQuizBanner();
-  }, 180);
-}
-
-function handleStatePick(stateName) {
-  markAndAdvance(stateName, 'state');
+  }, 220);
 }
 
 function handleCapitalPick(stateName) {
@@ -405,20 +413,22 @@ function handleCapitalPick(stateName) {
 
 async function loadGeoJson() {
   const response = await fetch('germany-states.geojson');
-  if (!response.ok) throw new Error(`Could not load germany-states.geojson (${response.status}).`);
+  if (!response.ok) {
+    throw new Error(`Could not load germany-states.geojson (${response.status}).`);
+  }
 
   const geojson = await response.json();
   if (geojson.type !== 'FeatureCollection') {
     throw new Error('germany-states.geojson must be a GeoJSON FeatureCollection.');
   }
 
-  geoFeatures = geojson.features.filter((feature) => {
-    const name = stateNameFromFeature(feature);
-    return name && capitals[name];
+  features = geojson.features.filter((feature) => {
+    const stateName = stateNameFromFeature(feature);
+    return stateName && capitals[stateName];
   });
 
-  if (geoFeatures.length !== 16) {
-    throw new Error(`Expected 16 state features but found ${geoFeatures.length}.`);
+  if (features.length !== 16) {
+    throw new Error(`Expected 16 state features but found ${features.length}.`);
   }
 
   renderMap();

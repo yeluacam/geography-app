@@ -1,0 +1,21 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {"type":"Feature","properties":{"name":"Schleswig-Holstein"},"geometry":{"type":"Polygon","coordinates":[[[8.0,54.9],[10.8,55.0],[10.9,54.4],[10.4,53.9],[8.4,54.0],[8.0,54.9]]]}},
+    {"type":"Feature","properties":{"name":"Mecklenburg-Vorpommern"},"geometry":{"type":"Polygon","coordinates":[[[10.8,54.9],[14.5,54.7],[14.6,53.7],[13.7,53.2],[11.6,53.2],[10.9,54.0],[10.8,54.9]]]}},
+    {"type":"Feature","properties":{"name":"Hamburg"},"geometry":{"type":"Polygon","coordinates":[[[9.86,53.64],[10.14,53.64],[10.14,53.45],[9.86,53.45],[9.86,53.64]]]}},
+    {"type":"Feature","properties":{"name":"Bremen"},"geometry":{"type":"Polygon","coordinates":[[[8.64,53.20],[8.96,53.20],[8.96,52.98],[8.64,52.98],[8.64,53.20]]]}},
+    {"type":"Feature","properties":{"name":"Lower Saxony"},"geometry":{"type":"Polygon","coordinates":[[[6.7,53.8],[11.7,53.8],[11.5,52.8],[10.8,52.2],[10.5,51.4],[9.3,51.3],[8.5,51.6],[7.5,52.0],[6.7,52.9],[6.7,53.8]]]}},
+    {"type":"Feature","properties":{"name":"Brandenburg"},"geometry":{"type":"Polygon","coordinates":[[[11.5,53.2],[14.5,53.2],[14.6,52.5],[14.5,51.6],[13.8,51.1],[12.8,51.2],[12.2,51.6],[11.5,52.2],[11.5,53.2]]]}},
+    {"type":"Feature","properties":{"name":"Berlin"},"geometry":{"type":"Polygon","coordinates":[[[13.25,52.62],[13.56,52.62],[13.56,52.42],[13.25,52.42],[13.25,52.62]]]}},
+    {"type":"Feature","properties":{"name":"Saxony-Anhalt"},"geometry":{"type":"Polygon","coordinates":[[[10.8,52.7],[12.8,52.6],[12.9,51.4],[12.1,50.8],[11.2,50.8],[10.5,51.4],[10.8,52.7]]]}},
+    {"type":"Feature","properties":{"name":"North Rhine-Westphalia"},"geometry":{"type":"Polygon","coordinates":[[[5.9,52.7],[8.5,52.7],[8.7,52.0],[8.3,51.0],[7.6,50.3],[6.6,50.4],[6.0,50.9],[5.9,52.7]]]}},
+    {"type":"Feature","properties":{"name":"Hesse"},"geometry":{"type":"Polygon","coordinates":[[[8.2,51.4],[10.5,51.4],[10.4,50.5],[9.9,49.8],[8.8,49.7],[8.2,50.3],[8.2,51.4]]]}},
+    {"type":"Feature","properties":{"name":"Thuringia"},"geometry":{"type":"Polygon","coordinates":[[[10.4,51.2],[12.1,51.2],[12.2,50.4],[11.7,50.0],[10.8,50.0],[10.2,50.4],[10.4,51.2]]]}},
+    {"type":"Feature","properties":{"name":"Saxony"},"geometry":{"type":"Polygon","coordinates":[[[12.1,51.2],[14.6,51.2],[14.7,50.7],[14.6,50.1],[13.9,50.0],[13.2,50.1],[12.4,50.0],[12.0,50.4],[12.1,51.2]]]}},
+    {"type":"Feature","properties":{"name":"Rhineland-Palatinate"},"geometry":{"type":"Polygon","coordinates":[[[6.4,50.7],[8.9,50.7],[8.8,49.9],[8.2,49.1],[7.4,49.0],[6.7,49.3],[6.4,50.1],[6.4,50.7]]]}},
+    {"type":"Feature","properties":{"name":"Saarland"},"geometry":{"type":"Polygon","coordinates":[[[6.5,49.5],[7.3,49.5],[7.3,49.0],[6.7,49.0],[6.5,49.5]]]}},
+    {"type":"Feature","properties":{"name":"Baden-Württemberg"},"geometry":{"type":"Polygon","coordinates":[[[7.5,49.3],[9.9,49.8],[10.3,49.2],[10.1,48.2],[9.5,47.6],[8.2,47.5],[7.6,47.7],[7.3,48.7],[7.5,49.3]]]}},
+    {"type":"Feature","properties":{"name":"Bavaria"},"geometry":{"type":"Polygon","coordinates":[[[9.9,49.8],[12.4,50.0],[13.2,50.1],[13.9,50.0],[13.6,49.2],[12.6,48.4],[12.5,47.6],[11.5,47.4],[10.2,47.5],[10.1,48.2],[10.3,49.2],[9.9,49.8]]]}}
+  ]
+}

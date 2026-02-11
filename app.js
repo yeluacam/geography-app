@@ -1,129 +1,235 @@
-const states = [
-  { id: 'SH', name: 'Schleswig-Holstein', capital: 'Kiel', center: [320, 90], points: '210,40 430,40 450,150 220,165' },
-  { id: 'MV', name: 'Mecklenburg-Vorpommern', capital: 'Schwerin', center: [560, 130], points: '450,60 700,75 700,215 470,215 450,150' },
-  { id: 'HH', name: 'Hamburg', capital: 'Hamburg', center: [360, 205], points: '335,182 383,182 383,220 335,220' },
-  { id: 'HB', name: 'Bremen', capital: 'Bremen', center: [255, 255], points: '228,233 278,233 278,273 228,273' },
-  { id: 'NI', name: 'Lower Saxony', capital: 'Hanover', center: [300, 320], points: '145,180 470,180 485,470 145,455' },
-  { id: 'BB', name: 'Brandenburg', capital: 'Potsdam', center: [620, 355], points: '500,230 735,230 735,470 520,470' },
-  { id: 'BE', name: 'Berlin', capital: 'Berlin', center: [620, 330], points: '602,312 640,312 640,350 602,350' },
-  { id: 'ST', name: 'Saxony-Anhalt', capital: 'Magdeburg', center: [495, 380], points: '405,280 550,280 570,470 420,470' },
-  { id: 'NW', name: 'North Rhine-Westphalia', capital: 'Düsseldorf', center: [125, 475], points: '20,345 245,345 245,620 20,620' },
-  { id: 'HE', name: 'Hesse', capital: 'Wiesbaden', center: [305, 565], points: '235,470 415,470 405,690 230,690' },
-  { id: 'TH', name: 'Thuringia', capital: 'Erfurt', center: [510, 575], points: '430,470 610,470 610,675 425,675' },
-  { id: 'SN', name: 'Saxony', capital: 'Dresden', center: [650, 645], points: '560,470 780,470 780,760 580,780' },
-  { id: 'RP', name: 'Rhineland-Palatinate', capital: 'Mainz', center: [170, 700], points: '20,620 250,620 250,860 20,860' },
-  { id: 'SL', name: 'Saarland', capital: 'Saarbrücken', center: [85, 840], points: '20,820 130,820 130,910 20,910' },
-  { id: 'BW', name: 'Baden-Württemberg', capital: 'Stuttgart', center: [285, 855], points: '140,690 440,690 470,1070 130,1070' },
-  { id: 'BY', name: 'Bavaria', capital: 'Munich', center: [610, 890], points: '430,675 810,675 810,1070 455,1070' }
-];
+const capitals = {
+  'Baden-Württemberg': { capital: 'Stuttgart', lon: 9.1829, lat: 48.7758 },
+  Bavaria: { capital: 'Munich', lon: 11.582, lat: 48.1351 },
+  Berlin: { capital: 'Berlin', lon: 13.405, lat: 52.52 },
+  Brandenburg: { capital: 'Potsdam', lon: 13.0645, lat: 52.3906 },
+  Bremen: { capital: 'Bremen', lon: 8.8017, lat: 53.0793 },
+  Hamburg: { capital: 'Hamburg', lon: 9.9937, lat: 53.5511 },
+  Hesse: { capital: 'Wiesbaden', lon: 8.2398, lat: 50.0782 },
+  'Lower Saxony': { capital: 'Hanover', lon: 9.732, lat: 52.3759 },
+  'Mecklenburg-Vorpommern': { capital: 'Schwerin', lon: 11.4148, lat: 53.6355 },
+  'North Rhine-Westphalia': { capital: 'Düsseldorf', lon: 6.7735, lat: 51.2277 },
+  'Rhineland-Palatinate': { capital: 'Mainz', lon: 8.2473, lat: 50.0 },
+  Saarland: { capital: 'Saarbrücken', lon: 6.9969, lat: 49.2402 },
+  Saxony: { capital: 'Dresden', lon: 13.7373, lat: 51.0504 },
+  'Saxony-Anhalt': { capital: 'Magdeburg', lon: 11.6276, lat: 52.1205 },
+  'Schleswig-Holstein': { capital: 'Kiel', lon: 10.1228, lat: 54.3233 },
+  Thuringia: { capital: 'Erfurt', lon: 11.0299, lat: 50.9848 }
+};
 
-const mapEl = document.getElementById('map');
+const stateNameAliases = {
+  BadenWuerttemberg: 'Baden-Württemberg',
+  Bayern: 'Bavaria',
+  Berlin: 'Berlin',
+  Brandenburg: 'Brandenburg',
+  Bremen: 'Bremen',
+  Hamburg: 'Hamburg',
+  Hessen: 'Hesse',
+  Niedersachsen: 'Lower Saxony',
+  MecklenburgVorpommern: 'Mecklenburg-Vorpommern',
+  NordrheinWestfalen: 'North Rhine-Westphalia',
+  RheinlandPfalz: 'Rhineland-Palatinate',
+  Saarland: 'Saarland',
+  Sachsen: 'Saxony',
+  SachsenAnhalt: 'Saxony-Anhalt',
+  SchleswigHolstein: 'Schleswig-Holstein',
+  Thueringen: 'Thuringia',
+  Thüringen: 'Thuringia'
+};
+
+const map = d3.select('#map');
+const selectionStatus = document.getElementById('selection-status');
 const stateToggle = document.getElementById('toggle-state-labels');
 const capitalToggle = document.getElementById('toggle-capital-labels');
-const quizStatus = document.getElementById('quiz-status');
 const quizLength = document.getElementById('quiz-length');
 const quizTime = document.getElementById('quiz-time');
 const startQuizButton = document.getElementById('start-quiz');
 const stopQuizButton = document.getElementById('stop-quiz');
+const quizStatus = document.getElementById('quiz-status');
 
-const stateNodes = new Map();
-const capitalNodes = new Map();
-const stateLabelNodes = [];
-const capitalLabelNodes = [];
+let projection;
+let geoPath;
+let features = [];
+const stateElements = new Map();
+const capitalElements = new Map();
+const stateLabelElements = new Map();
+const capitalLabelElements = new Map();
 
 const quizState = {
   active: false,
   questions: [],
   currentIndex: 0,
   score: 0,
-  deadline: null,
+  deadline: 0,
   timerId: null
 };
 
+function normalizeStateName(raw) {
+  const input = String(raw ?? '').trim();
+  if (!input) return null;
+
+  if (capitals[input]) return input;
+
+  const compact = input
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^A-Za-z]/g, '');
+
+  return stateNameAliases[compact] ?? input;
+}
+
+function stateNameFromFeature(feature) {
+  const props = feature.properties ?? {};
+  const candidate =
+    props.name ?? props.NAME_1 ?? props.state ?? props.State ?? props.land ?? props.LAND ?? props.GEN;
+  return normalizeStateName(candidate);
+}
+
+function getMapDimensions() {
+  const svgNode = map.node();
+  const box = svgNode.getBoundingClientRect();
+  return {
+    width: Math.max(640, Math.round(box.width || 720)),
+    height: 980
+  };
+}
+
+function clearMap() {
+  map.selectAll('*').remove();
+  stateElements.clear();
+  capitalElements.clear();
+  stateLabelElements.clear();
+  capitalLabelElements.clear();
+}
+
 function renderMap() {
-  mapEl.innerHTML = '';
+  clearMap();
 
-  for (const state of states) {
-    const polygon = svgEl('polygon', {
-      points: state.points,
-      class: 'state',
-      'data-id': state.id,
-      'aria-label': state.name
-    });
+  const { width, height } = getMapDimensions();
+  map.attr('viewBox', `0 0 ${width} ${height}`);
 
-    polygon.addEventListener('click', () => handleStatePick(state.id));
-    mapEl.appendChild(polygon);
-    stateNodes.set(state.id, polygon);
+  projection = d3.geoMercator().fitSize([width - 20, height - 20], {
+    type: 'FeatureCollection',
+    features
+  });
+  geoPath = d3.geoPath(projection);
 
-    const stateLabel = svgEl('text', {
-      x: state.center[0],
-      y: state.center[1] - 18,
-      class: 'state-label',
-      'data-id': state.id
-    });
-    stateLabel.textContent = state.name;
-    mapEl.appendChild(stateLabel);
-    stateLabelNodes.push(stateLabel);
+  const mapLayer = map.append('g').attr('transform', 'translate(10,10)');
 
-    const capitalDot = svgEl('circle', {
-      cx: state.center[0],
-      cy: state.center[1] + 10,
-      r: 10,
-      class: 'capital-dot',
-      'data-id': state.id,
-      'aria-label': state.capital
-    });
-    capitalDot.addEventListener('click', () => handleCapitalPick(state.id));
-    mapEl.appendChild(capitalDot);
-    capitalNodes.set(state.id, capitalDot);
+  for (const feature of features) {
+    const stateName = stateNameFromFeature(feature);
+    if (!stateName || !capitals[stateName]) continue;
 
-    const capitalLabel = svgEl('text', {
-      x: state.center[0],
-      y: state.center[1] + 42,
-      class: 'capital-label',
-      'data-id': state.id
-    });
-    capitalLabel.textContent = state.capital;
-    mapEl.appendChild(capitalLabel);
-    capitalLabelNodes.push(capitalLabel);
+    const statePath = mapLayer
+      .append('path')
+      .attr('class', 'state')
+      .attr('data-state', stateName)
+      .attr('d', geoPath(feature))
+      .attr('tabindex', 0)
+      .attr('aria-label', stateName);
+
+    const centroid = geoPath.centroid(feature);
+
+    const stateLabel = mapLayer
+      .append('text')
+      .attr('class', 'state-label')
+      .attr('x', centroid[0])
+      .attr('y', centroid[1])
+      .text(stateName);
+
+    const [cx, cy] = projection([capitals[stateName].lon, capitals[stateName].lat]);
+
+    const capitalDot = mapLayer
+      .append('circle')
+      .attr('class', 'capital-dot')
+      .attr('data-state', stateName)
+      .attr('cx', cx)
+      .attr('cy', cy)
+      .attr('r', 4.5)
+      .attr('tabindex', 0)
+      .attr('aria-label', `${capitals[stateName].capital}, capital of ${stateName}`);
+
+    const capitalLabel = mapLayer
+      .append('text')
+      .attr('class', 'capital-label')
+      .attr('x', cx + 6)
+      .attr('y', cy - 6)
+      .text(capitals[stateName].capital);
+
+    statePath
+      .on('click', () => handleStatePick(stateName))
+      .on('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          handleStatePick(stateName);
+        }
+      });
+
+    capitalDot
+      .on('click', () => handleCapitalPick(stateName))
+      .on('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          handleCapitalPick(stateName);
+        }
+      });
+
+    stateElements.set(stateName, statePath);
+    capitalElements.set(stateName, capitalDot);
+    stateLabelElements.set(stateName, stateLabel);
+    capitalLabelElements.set(stateName, capitalLabel);
   }
 
   updateLabelVisibility();
-}
-
-function svgEl(tag, attrs) {
-  const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
-  Object.entries(attrs).forEach(([key, value]) => el.setAttribute(key, value));
-  return el;
 }
 
 function updateLabelVisibility() {
-  stateLabelNodes.forEach((label) => {
-    label.style.display = stateToggle.checked ? 'block' : 'none';
-  });
-  capitalLabelNodes.forEach((label) => {
-    label.style.display = capitalToggle.checked ? 'block' : 'none';
-  });
+  for (const el of stateLabelElements.values()) {
+    el.style('display', stateToggle.checked ? 'block' : 'none');
+  }
+
+  for (const el of capitalLabelElements.values()) {
+    el.style('display', capitalToggle.checked ? 'block' : 'none');
+  }
 }
 
 function applyPreset(preset) {
-  if (preset === 'study') {
-    stateToggle.checked = true;
-    capitalToggle.checked = true;
-  }
-  if (preset === 'states') {
-    stateToggle.checked = true;
-    capitalToggle.checked = false;
-  }
-  if (preset === 'capitals') {
-    stateToggle.checked = false;
-    capitalToggle.checked = true;
-  }
-  if (preset === 'hard') {
-    stateToggle.checked = false;
-    capitalToggle.checked = false;
-  }
+  const presets = {
+    study: [true, true],
+    states: [true, false],
+    capitals: [false, true],
+    hard: [false, false]
+  };
+
+  const selected = presets[preset];
+  if (!selected) return;
+
+  [stateToggle.checked, capitalToggle.checked] = selected;
   updateLabelVisibility();
+}
+
+function createQuestions(totalQuestions) {
+  const names = Array.from(stateElements.keys());
+  const order = [...names].sort(() => Math.random() - 0.5).slice(0, Math.min(totalQuestions, names.length));
+  const half = Math.ceil(order.length / 2);
+
+  const base = order.map((stateName, index) => {
+    if (index < half) {
+      return {
+        type: 'capital',
+        stateName,
+        prompt: `Click the capital of ${stateName}.`
+      };
+    }
+
+    return {
+      type: 'state',
+      stateName,
+      prompt: `Click the state whose capital is ${capitals[stateName].capital}.`
+    };
+  });
+
+  return base.sort(() => Math.random() - 0.5);
 }
 
 function startQuiz() {
@@ -140,26 +246,8 @@ function startQuiz() {
     return;
   }
 
-  const shuffled = [...states].sort(() => Math.random() - 0.5);
-  const picked = shuffled.slice(0, Math.min(totalQuestions, states.length));
-  const questions = picked.map((state) => {
-    const askForCapital = Math.random() > 0.5;
-    return askForCapital
-      ? {
-          type: 'capital',
-          stateId: state.id,
-          prompt: `Click the capital of ${state.name}.`
-        }
-      : {
-          type: 'state',
-          stateId: state.id,
-          prompt: `Click the state whose capital is ${state.capital}.`
-        };
-  });
-
-  resetMarks();
   quizState.active = true;
-  quizState.questions = questions;
+  quizState.questions = createQuestions(totalQuestions);
   quizState.currentIndex = 0;
   quizState.score = 0;
   quizState.deadline = Date.now() + totalSeconds * 1000;
@@ -169,8 +257,10 @@ function startQuiz() {
 
   if (quizState.timerId) clearInterval(quizState.timerId);
   quizState.timerId = setInterval(updateQuizBanner, 250);
-  updateQuizBanner();
+
+  resetMarks();
   highlightCurrentAnswerArea();
+  updateQuizBanner();
 }
 
 function stopQuiz(message = 'Quiz stopped.') {
@@ -182,7 +272,8 @@ function stopQuiz(message = 'Quiz stopped.') {
   quizState.active = false;
   quizState.questions = [];
   quizState.currentIndex = 0;
-  quizState.deadline = null;
+  quizState.deadline = 0;
+
   startQuizButton.disabled = false;
   stopQuizButton.disabled = true;
   resetMarks();
@@ -198,51 +289,53 @@ function updateQuizBanner() {
     return;
   }
 
-  const q = quizState.questions[quizState.currentIndex];
-  if (!q) {
+  const question = quizState.questions[quizState.currentIndex];
+  if (!question) {
     stopQuiz(`Completed. Final score: ${quizState.score}/${quizState.questions.length}.`);
     return;
   }
 
-  const remaining = Math.ceil(remainingMs / 1000);
-  quizStatus.textContent = `Q${quizState.currentIndex + 1}/${quizState.questions.length} • Score ${quizState.score} • ${remaining}s left • ${q.prompt}`;
+  const remainingSeconds = Math.ceil(remainingMs / 1000);
+  quizStatus.textContent = `Q${quizState.currentIndex + 1}/${quizState.questions.length} • Score ${quizState.score} • ${remainingSeconds}s left • ${question.prompt}`;
 }
 
 function resetMarks() {
-  stateNodes.forEach((node) => node.classList.remove('correct', 'wrong', 'active'));
-  capitalNodes.forEach((node) => node.classList.remove('correct', 'wrong', 'active'));
+  for (const el of stateElements.values()) el.classed('correct wrong active selected', false);
+  for (const el of capitalElements.values()) el.classed('correct wrong active selected', false);
 }
 
 function highlightCurrentAnswerArea() {
   resetMarks();
   if (!quizState.active) return;
 
-  const q = quizState.questions[quizState.currentIndex];
-  if (!q) return;
+  const question = quizState.questions[quizState.currentIndex];
+  if (!question) return;
 
-  if (q.type === 'capital') {
-    capitalNodes.get(q.stateId)?.classList.add('active');
+  if (question.type === 'capital') {
+    stateElements.get(question.stateName)?.classed('active', true);
   } else {
-    stateNodes.get(q.stateId)?.classList.add('active');
+    capitalElements.get(question.stateName)?.classed('active', true);
   }
 }
 
-function markAndAdvance(targetId, pickedType) {
-  if (!quizState.active) return;
+function markAndAdvance(stateName, pickedType) {
+  if (!quizState.active) {
+    selectionStatus.textContent = `${stateName} — ${capitals[stateName].capital}`;
+    stateElements.get(stateName)?.classed('selected', true);
+    return;
+  }
 
-  const q = quizState.questions[quizState.currentIndex];
-  if (!q || q.type !== pickedType) return;
+  const question = quizState.questions[quizState.currentIndex];
+  if (!question || question.type !== pickedType) return;
 
-  const isCorrect = q.stateId === targetId;
-  const stateNode = stateNodes.get(targetId);
-  const capitalNode = capitalNodes.get(targetId);
+  const isCorrect = question.stateName === stateName;
 
   if (pickedType === 'capital') {
-    capitalNode?.classList.remove('active');
-    capitalNode?.classList.add(isCorrect ? 'correct' : 'wrong');
+    capitalElements.get(stateName)?.classed(isCorrect ? 'correct' : 'wrong', true);
+    stateElements.get(question.stateName)?.classed('active', true);
   } else {
-    stateNode?.classList.remove('active');
-    stateNode?.classList.add(isCorrect ? 'correct' : 'wrong');
+    stateElements.get(stateName)?.classed(isCorrect ? 'correct' : 'wrong', true);
+    capitalElements.get(question.stateName)?.classed('active', true);
   }
 
   if (isCorrect) quizState.score += 1;
@@ -251,22 +344,45 @@ function markAndAdvance(targetId, pickedType) {
   updateQuizBanner();
 
   if (quizState.currentIndex >= quizState.questions.length) {
-    setTimeout(() => stopQuiz(`Completed. Final score: ${quizState.score}/${quizState.questions.length}.`), 350);
+    setTimeout(() => stopQuiz(`Completed. Final score: ${quizState.score}/${quizState.questions.length}.`), 300);
     return;
   }
 
   setTimeout(() => {
     highlightCurrentAnswerArea();
     updateQuizBanner();
-  }, 260);
+  }, 180);
 }
 
-function handleStatePick(stateId) {
-  markAndAdvance(stateId, 'state');
+function handleStatePick(stateName) {
+  markAndAdvance(stateName, 'state');
 }
 
-function handleCapitalPick(stateId) {
-  markAndAdvance(stateId, 'capital');
+function handleCapitalPick(stateName) {
+  markAndAdvance(stateName, 'capital');
+}
+
+async function loadGeoJson() {
+  const response = await fetch('germany-states.geojson');
+  if (!response.ok) {
+    throw new Error(`Could not load germany-states.geojson (${response.status}).`);
+  }
+
+  const geojson = await response.json();
+  if (geojson.type !== 'FeatureCollection') {
+    throw new Error('germany-states.geojson must be a GeoJSON FeatureCollection.');
+  }
+
+  features = geojson.features.filter((feature) => {
+    const stateName = stateNameFromFeature(feature);
+    return stateName && capitals[stateName];
+  });
+
+  if (features.length !== 16) {
+    throw new Error(`Expected 16 state features but found ${features.length}.`);
+  }
+
+  renderMap();
 }
 
 stateToggle.addEventListener('change', updateLabelVisibility);
@@ -279,4 +395,7 @@ for (const button of document.querySelectorAll('[data-preset]')) {
 startQuizButton.addEventListener('click', startQuiz);
 stopQuizButton.addEventListener('click', () => stopQuiz('Quiz stopped.'));
 
-renderMap();
+loadGeoJson().catch((error) => {
+  quizStatus.textContent = error.message;
+  selectionStatus.textContent = 'Map data missing or invalid. Add a valid germany-states.geojson with 16 states.';
+});

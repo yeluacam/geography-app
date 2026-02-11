@@ -1,0 +1,123 @@
+:root {
+  color-scheme: light;
+  --bg: #f4f7fb;
+  --panel: #ffffff;
+  --text: #112035;
+  --muted: #496180;
+  --state: #cfe2ff;
+  --state-border: #365d91;
+  --capital: #cf3b3b;
+  --quiz: #123058;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Inter, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.layout {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1rem;
+  display: grid;
+  gap: 1rem;
+}
+
+h1, h2, p { margin: 0; }
+
+.controls,
+.quiz,
+.map-wrap {
+  background: var(--panel);
+  border: 1px solid #d8e2ef;
+  border-radius: 12px;
+  padding: 0.9rem;
+}
+
+.toggle-group,
+.preset-group,
+.quiz-controls {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+button {
+  border: none;
+  border-radius: 8px;
+  padding: 0.55rem 0.8rem;
+  background: #2563eb;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+input[type='number'] {
+  width: 6rem;
+  padding: 0.4rem;
+}
+
+.quiz-status {
+  margin-top: 0.8rem;
+  color: var(--quiz);
+  min-height: 1.4rem;
+  font-weight: 600;
+}
+
+#map {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: linear-gradient(#f6f9fe, #ecf3fc);
+}
+
+.state {
+  fill: var(--state);
+  stroke: var(--state-border);
+  stroke-width: 3;
+  cursor: pointer;
+  transition: fill 0.15s;
+}
+
+.state:hover { fill: #b8d3fb; }
+.state.correct { fill: #9be3a2; }
+.state.wrong { fill: #f4b5b5; }
+.state.active { fill: #ffe79f; }
+
+.state-label,
+.capital-label {
+  font-size: 20px;
+  text-anchor: middle;
+  pointer-events: none;
+  user-select: none;
+  fill: #102949;
+}
+
+.capital-dot {
+  fill: var(--capital);
+  stroke: #fff;
+  stroke-width: 3;
+  cursor: pointer;
+}
+
+.capital-dot.correct { fill: #2f9d3a; }
+.capital-dot.wrong { fill: #b91c1c; }
+.capital-dot.active { fill: #f59e0b; }
+
+.hidden-labels .state-label,
+.hidden-capitals .capital-label { display: none; }
+
+@media (max-width: 760px) {
+  .state-label,
+  .capital-label { font-size: 16px; }
+}

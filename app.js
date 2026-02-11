@@ -194,6 +194,11 @@ function renderMap() {
     });
     stateLabel.textContent = state.name;
 
+    const [lx, ly] = featureCentroid(feature);
+    const stateLabel = svgEl('text', { class: 'state-label', x: lx, y: ly });
+    stateLabel.textContent = stateName;
+
+    const [cx, cy] = projection.project(capitals[stateName].lon, capitals[stateName].lat);
     const capitalDot = svgEl('circle', {
       cx: state.capitalPos[0],
       cy: state.capitalPos[1],
@@ -238,8 +243,8 @@ function renderMap() {
 }
 
 function updateLabelVisibility() {
-  stateLabelNodes.forEach((label) => {
-    label.style.display = stateToggle.checked ? 'block' : 'none';
+  stateLabelElements.forEach((el) => {
+    el.style.display = stateToggle.checked ? 'block' : 'none';
   });
 
   capitalLabelNodes.forEach((label) => {
@@ -293,7 +298,6 @@ function startQuiz() {
     quizStatus.textContent = 'Question count must be at least 1.';
     return;
   }
-
   if (!Number.isFinite(totalSeconds) || totalSeconds < 15) {
     quizStatus.textContent = 'Time should be at least 15 seconds.';
     return;

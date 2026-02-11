@@ -98,17 +98,22 @@ input[type='number'] {
   background: linear-gradient(#f6f9fe, #ecf3fc);
 }
 
+.country-outline {
+  fill: #e9f2ff;
+  stroke: #94b3da;
+  stroke-width: 4;
+}
+
 .state {
   fill: var(--state);
   stroke: var(--state-border);
-  stroke-width: 1.6;
+  stroke-width: 2.2;
   cursor: pointer;
   transition: fill 0.15s;
 }
 
-.state:hover,
-.state.selected {
-  fill: #bfd8ff;
+.state:hover {
+  fill: #c3dafc;
 }
 
 .state.correct {
@@ -139,12 +144,8 @@ input[type='number'] {
 .capital-dot {
   fill: var(--capital);
   stroke: #fff;
-  stroke-width: 1.4;
+  stroke-width: 1.6;
   cursor: pointer;
-}
-
-.capital-dot.selected {
-  fill: #9c2b2b;
 }
 
 .capital-dot.correct {

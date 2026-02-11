@@ -138,10 +138,13 @@ const startQuizButton = document.getElementById('start-quiz');
 const stopQuizButton = document.getElementById('stop-quiz');
 const quizStatus = document.getElementById('quiz-status');
 
-const stateNodes = new Map();
-const capitalNodes = new Map();
-const stateLabelNodes = [];
-const capitalLabelNodes = [];
+let projection;
+let geoPath;
+let features = [];
+const stateElements = new Map();
+const capitalElements = new Map();
+const stateLabelElements = new Map();
+const capitalLabelElements = new Map();
 
 const quizState = {
   active: false,
@@ -224,7 +227,14 @@ function renderMap() {
     capitalLabelNodes.push(capitalLabel);
   }
 
-  updateLabelVisibility();
+  if (capitals[input]) return input;
+
+  const compact = input
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^A-Za-z]/g, '');
+
+  return stateNameAliases[compact] ?? input;
 }
 
 function updateLabelVisibility() {
@@ -343,8 +353,8 @@ function updateQuizBanner() {
 }
 
 function resetMarks() {
-  stateNodes.forEach((node) => node.classList.remove('correct', 'wrong', 'active'));
-  capitalNodes.forEach((node) => node.classList.remove('correct', 'wrong', 'active'));
+  for (const el of stateElements.values()) el.classed('correct wrong active selected', false);
+  for (const el of capitalElements.values()) el.classed('correct wrong active selected', false);
 }
 
 function highlightCurrentAnswerArea() {
@@ -393,12 +403,31 @@ function markAndAdvance(stateId, pickedType) {
   }, 220);
 }
 
-function handleStatePick(stateId) {
-  markAndAdvance(stateId, 'state');
+function handleCapitalPick(stateName) {
+  markAndAdvance(stateName, 'capital');
 }
 
-function handleCapitalPick(stateId) {
-  markAndAdvance(stateId, 'capital');
+async function loadGeoJson() {
+  const response = await fetch('germany-states.geojson');
+  if (!response.ok) {
+    throw new Error(`Could not load germany-states.geojson (${response.status}).`);
+  }
+
+  const geojson = await response.json();
+  if (geojson.type !== 'FeatureCollection') {
+    throw new Error('germany-states.geojson must be a GeoJSON FeatureCollection.');
+  }
+
+  features = geojson.features.filter((feature) => {
+    const stateName = stateNameFromFeature(feature);
+    return stateName && capitals[stateName];
+  });
+
+  if (features.length !== 16) {
+    throw new Error(`Expected 16 state features but found ${features.length}.`);
+  }
+
+  renderMap();
 }
 
 stateToggle.addEventListener('change', updateLabelVisibility);
@@ -411,4 +440,7 @@ for (const button of document.querySelectorAll('[data-preset]')) {
 startQuizButton.addEventListener('click', startQuiz);
 stopQuizButton.addEventListener('click', () => stopQuiz('Quiz stopped.'));
 
-renderMap();
+loadGeoJson().catch((error) => {
+  quizStatus.textContent = error.message;
+  selectionStatus.textContent = 'Map data missing or invalid. Add a valid germany-states.geojson with 16 states.';
+});

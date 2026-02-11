@@ -76,11 +76,19 @@ input[type='number'] {
   padding: 0.4rem;
 }
 
-.quiz-status {
+.quiz-status,
+.selection-status {
   margin-top: 0.8rem;
-  color: var(--quiz);
   min-height: 1.4rem;
   font-weight: 600;
+}
+
+.quiz-status {
+  color: var(--quiz);
+}
+
+.selection-status {
+  color: #243f66;
 }
 
 #map {
